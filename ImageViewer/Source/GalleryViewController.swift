@@ -675,6 +675,9 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         case (_ as ImageViewController, let item as UIImageView):
             guard let image = item.image else { return }
 
+            // Some system share sheets in UIActivityViewController will be hidden by the GalleryViewController if we a windowLevel of statusBar.
+            // To work around this, set windowLevel to normal on showing UIActivityViewController and put it back to statusBar if needed after
+            // share sheet is done.
             UIApplication.applicationWindow.windowLevel = UIWindow.Level.normal
             let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
             activityVC.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
@@ -685,6 +688,9 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         case (_ as VideoViewController, let item as VideoView):
             guard let videoUrl = ((item.player?.currentItem?.asset) as? AVURLAsset)?.url else { return }
 
+            // Some system share sheets in UIActivityViewController will be hidden by the GalleryViewController if we a windowLevel of statusBar.
+            // To work around this, set windowLevel to normal on showing UIActivityViewController and put it back to statusBar if needed after
+            // share sheet is done.
             UIApplication.applicationWindow.windowLevel = UIWindow.Level.normal
             let activityVC = UIActivityViewController(activityItems: [videoUrl], applicationActivities: nil)
             activityVC.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
