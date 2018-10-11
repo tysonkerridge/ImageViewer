@@ -683,6 +683,8 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             activityVC.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
                 UIApplication.applicationWindow.windowLevel = self.statusBarHidden ? UIWindow.Level.statusBar : UIWindow.Level.normal
             }
+            activityVC.popoverPresentationController?.sourceView = item
+            activityVC.popoverPresentationController?.sourceRect = item.bounds
             self.present(activityVC, animated: true)
 
         case (_ as VideoViewController, let item as VideoView):
@@ -696,6 +698,8 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             activityVC.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
                 UIApplication.applicationWindow.windowLevel = self.statusBarHidden ? UIWindow.Level.statusBar : UIWindow.Level.normal
             }
+            activityVC.popoverPresentationController?.sourceView = item
+            activityVC.popoverPresentationController?.sourceRect = item.bounds
             self.present(activityVC, animated: true)
 
         default:  return
