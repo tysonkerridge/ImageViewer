@@ -152,7 +152,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         super.init(transitionStyle: UIPageViewController.TransitionStyle.scroll,
                    navigationOrientation: UIPageViewController.NavigationOrientation.horizontal,
-                   options: [UIPageViewController.OptionsKey.interPageSpacing : NSNumber(value: spineDividerWidth as Float)])
+                   options: [.interPageSpacing : NSNumber(value: spineDividerWidth as Float)])
 
         pagingDataSource.itemControllerDelegate = self
 
@@ -169,7 +169,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         self.modalPresentationStyle = .overFullScreen
         self.dataSource = pagingDataSource
 
-        UIApplication.applicationWindow.windowLevel = (statusBarHidden) ? UIWindow.Level.statusBar + 1 : UIWindow.Level.normal
+        UIApplication.applicationWindow.windowLevel = (statusBarHidden) ? UIWindow.Level.statusBar : UIWindow.Level.normal
 
         NotificationCenter.default.addObserver(self, selector: #selector(GalleryViewController.rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
 
@@ -484,7 +484,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         
         guard currentIndex != index && index >= 0 && index < itemsDataSource.itemCount() else { return }
 
-        let imageViewController = pagingDataSource.createItemController(index)
+        let imageViewController = self.pagingDataSource.createItemController(index)
         let direction: UIPageViewController.NavigationDirection = index > currentIndex ? .forward : .reverse
 
         // workaround to make UIPageViewController happy
@@ -700,12 +700,32 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         case (_ as ImageViewController, let item as UIImageView):
             guard let image = item.image else { return }
+
+            // Some system share sheets in UIActivityViewController will be hidden by the GalleryViewController if we a windowLevel of statusBar.
+            // To work around this, set windowLevel to normal on showing UIActivityViewController and put it back to statusBar if needed after
+            // share sheet is done.
+            UIApplication.applicationWindow.windowLevel = UIWindow.Level.normal
             let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+            activityVC.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
+                UIApplication.applicationWindow.windowLevel = self.statusBarHidden ? UIWindow.Level.statusBar : UIWindow.Level.normal
+            }
+            activityVC.popoverPresentationController?.sourceView = item
+            activityVC.popoverPresentationController?.sourceRect = item.bounds
             self.present(activityVC, animated: true)
 
         case (_ as VideoViewController, let item as VideoView):
             guard let videoUrl = ((item.player?.currentItem?.asset) as? AVURLAsset)?.url else { return }
+
+            // Some system share sheets in UIActivityViewController will be hidden by the GalleryViewController if we a windowLevel of statusBar.
+            // To work around this, set windowLevel to normal on showing UIActivityViewController and put it back to statusBar if needed after
+            // share sheet is done.
+            UIApplication.applicationWindow.windowLevel = UIWindow.Level.normal
             let activityVC = UIActivityViewController(activityItems: [videoUrl], applicationActivities: nil)
+            activityVC.completionWithItemsHandler = { activityType, completed, returnedItems, activityError in
+                UIApplication.applicationWindow.windowLevel = self.statusBarHidden ? UIWindow.Level.statusBar : UIWindow.Level.normal
+            }
+            activityVC.popoverPresentationController?.sourceView = item
+            activityVC.popoverPresentationController?.sourceRect = item.bounds
             self.present(activityVC, animated: true)
 
         default:  return
