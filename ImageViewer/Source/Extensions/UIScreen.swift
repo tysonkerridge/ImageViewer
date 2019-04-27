@@ -8,7 +8,7 @@
 
 import UIKit
 
-public extension UIScreen {
+extension UIScreen {
     
     private static var iPhoneXRSize: CGSize { return CGSize(width: 828, height: 1792) }
     private static var iPhoneXSSize: CGSize { return CGSize(width: 1125, height: 2436) }
