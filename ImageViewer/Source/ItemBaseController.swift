@@ -197,7 +197,8 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
     public func fetchImage() {
 
-        fetchImageBlock { [weak self] image in
+        let isForThumbnail = false
+        fetchImageBlock(isForThumbnail) { [weak self] image in
 
             if let image = image {
 

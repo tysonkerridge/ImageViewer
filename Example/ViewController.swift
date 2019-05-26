@@ -42,23 +42,34 @@ class ViewController: UIViewController {
 
             case 2:
 
-                galleryItem = GalleryItem.video(identifier: nil, fetchPreviewImageBlock: { $0(UIImage(named: "2")!) }, videoURL: URL (string: "http://video.dailymail.co.uk/video/mol/test/2016/09/21/5739239377694275356/1024x576_MP4_5739239377694275356.mp4")!)
+                galleryItem = GalleryItem.video(
+                    identifier: nil,
+                    fetchPreviewImageBlock: { _, completion in completion(UIImage(named: "2")!) },
+                    videoURL: URL(string: "http://video.dailymail.co.uk/video/mol/test/2016/09/21/5739239377694275356/1024x576_MP4_5739239377694275356.mp4")!
+                )
 
             case 4:
 
-                let myFetchImageBlock: FetchImageBlock = { $0(imageView.image!) }
+                let myFetchImageBlock: FetchImageBlock = { _, completion in completion(imageView.image!) }
 
                 let itemViewControllerBlock: ItemViewControllerBlock = { index, itemCount, fetchImageBlock, configuration, isInitialController in
 
                     return AnimatedViewController(index: index, itemCount: itemCount, fetchImageBlock: myFetchImageBlock, configuration: configuration, isInitialController: isInitialController)
                 }
 
-                galleryItem = GalleryItem.custom(identifier: nil, fetchImageBlock: myFetchImageBlock, itemViewControllerBlock: itemViewControllerBlock)
+                galleryItem = GalleryItem.custom(
+                    identifier: nil,
+                    fetchImageBlock: myFetchImageBlock,
+                    itemViewControllerBlock: itemViewControllerBlock
+                )
 
             default:
 
                 let image = imageView.image ?? UIImage(named: "0")!
-                galleryItem = GalleryItem.image(identifier: nil, fetchImageBlock: { $0(image) })
+                galleryItem = GalleryItem.image(
+                    identifier: nil,
+                    fetchImageBlock: { _, completion in completion(image) }
+                )
             }
 
             items.append(DataItem(imageView: imageView, galleryItem: galleryItem))

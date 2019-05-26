@@ -111,7 +111,8 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
              .custom(let identifier, let fetchImageBlock, _):
             cell.identifier = identifier
             cell.imageView.image = nil
-            fetchImageBlock { [weak cell] image in
+            let isForThumbnail = true
+            fetchImageBlock(isForThumbnail) { [weak cell] image in
                 guard let cell = cell else { return }
                 guard cell.identifier == identifier else { return }
                 cell.imageView.image = image
