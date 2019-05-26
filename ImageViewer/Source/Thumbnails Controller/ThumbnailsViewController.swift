@@ -106,34 +106,15 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
 
         switch item {
 
-        case .image(let fetchImageBlock):
-
-            fetchImageBlock() { image in
-
-                if let image = image {
-
-                    cell.imageView.image = image
-                }
-            }
-
-        case .video(let fetchImageBlock, _):
-
-            fetchImageBlock() { image in
-
-                if let image = image {
-
-                    cell.imageView.image = image
-                }
-            }
-
-        case .custom(let fetchImageBlock, _):
-
-            fetchImageBlock() { image in
-
-                if let image = image {
-
-                    cell.imageView.image = image
-                }
+        case .image(let identifier, let fetchImageBlock),
+             .video(let identifier, let fetchImageBlock, _),
+             .custom(let identifier, let fetchImageBlock, _):
+            cell.identifier = identifier
+            cell.imageView.image = nil
+            fetchImageBlock { [weak cell] image in
+                guard let cell = cell else { return }
+                guard cell.identifier == identifier else { return }
+                cell.imageView.image = image
             }
         }
 

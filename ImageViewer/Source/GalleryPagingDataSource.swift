@@ -77,7 +77,7 @@ final class GalleryPagingDataSource: NSObject, UIPageViewControllerDataSource {
 
         switch item {
 
-        case .image(let fetchImageBlock):
+        case .image(_, let fetchImageBlock):
 
             let imageController = ImageViewController(index: itemIndex, itemCount: itemsDataSource.itemCount(), fetchImageBlock: fetchImageBlock, configuration: configuration, isInitialController: isInitial)
             imageController.delegate = itemControllerDelegate
@@ -85,7 +85,7 @@ final class GalleryPagingDataSource: NSObject, UIPageViewControllerDataSource {
 
             return imageController
 
-        case .video(let fetchImageBlock, let videoURL):
+        case .video(_, let fetchImageBlock, let videoURL):
 
             let videoController = VideoViewController(index: itemIndex, itemCount: itemsDataSource.itemCount(), fetchImageBlock: fetchImageBlock, videoURL: videoURL, scrubber: scrubber, configuration: configuration, isInitialController: isInitial)
 
@@ -94,7 +94,7 @@ final class GalleryPagingDataSource: NSObject, UIPageViewControllerDataSource {
 
             return videoController
 
-        case .custom(let fetchImageBlock, let itemViewControllerBlock):
+        case .custom(_, let fetchImageBlock, let itemViewControllerBlock):
 
             guard let itemController = itemViewControllerBlock(itemIndex, itemsDataSource.itemCount(), fetchImageBlock, configuration, isInitial) as? ItemController, let vc = itemController as? UIViewController else { return UIViewController() }
 

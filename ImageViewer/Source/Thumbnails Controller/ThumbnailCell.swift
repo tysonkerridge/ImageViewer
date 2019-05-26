@@ -10,6 +10,7 @@ import UIKit
 
 class ThumbnailCell: UICollectionViewCell {
 
+    var identifier: String?
     let imageView = UIImageView()
 
     override init(frame: CGRect) {
